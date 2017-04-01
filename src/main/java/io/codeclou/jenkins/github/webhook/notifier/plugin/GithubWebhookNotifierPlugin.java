@@ -29,12 +29,13 @@ public class GithubWebhookNotifierPlugin extends Plugin {
      */
     @RequirePOST
     public HttpResponse doReceive(HttpServletRequest request, StaplerRequest staplerRequest) throws IOException, ServletException {
-        String jeninsRootUrl = Jenkins.getInstance().getRootUrl(); // will return something like: http://localhost:8080/jenkins/
+        String jenkinsRootUrl = Jenkins.getInstance().getRootUrl(); // will return something like: http://localhost:8080/jenkins/
         BufferedReader reader = request.getReader();
         Gson gson = new Gson();
         try {
             GithubWebhookPayload githubWebhookPayload = gson.fromJson(reader, GithubWebhookPayload.class);
-            String gitPluginNotifyUrl = jeninsRootUrl +
+            // Trigger Git-Plugins notify push SCM Polling Endpoint
+            String gitPluginNotifyUrl = jenkinsRootUrl +
                     "git/notifyCommit?" +
                     githubWebhookPayload.getRepository().getClone_url() +
                     "&branches=" +
