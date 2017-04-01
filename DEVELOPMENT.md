@@ -8,3 +8,11 @@ curl -X POST \
     -d @test-webhook-payload.json \
     http://localhost:8080/jenkins/plugin/github-webhook-notifier-plugin/receive
 ```
+
+### Build hpi
+
+```
+mvn clean
+mvn compile
+mvn hpi:hpi
+```
