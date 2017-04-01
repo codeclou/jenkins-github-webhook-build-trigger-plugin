@@ -1,0 +1,12 @@
+.idea
+target
+bin
+logs
+*.iml
+.settings
+.classpath
+.project
+generated
+node_modules
+*.log
+work
