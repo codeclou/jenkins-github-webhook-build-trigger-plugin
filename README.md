@@ -1,9 +1,34 @@
 # jenkins-github-webhook-notifier-plugin
+
 jenkins-github-webhook-notifier-plugin
 
+### What it does
+
+  * It parses the actual GitHub Webhook JSON Payload
+  * Extracts the Repository Clone URL and the Git Commit ID
+  * It triggers the Git-Plugins notifyTrigger with the fixed commit id
+  * That way tags and branches are build even if they have the same revision
+    * (a git push of a tag has a unique commit id but the same revision)
+
+### Why?
+
+I needed something that forcefully triggers my Jenkins Jobs by passing the actual Git Commit ID.
+
+The default behaviour of existing plugins is to "decide if it needs to rebuild". Which leads
+to a state where if your job just build your `master` Branch and you create a tag of off the `master` branch
+and push that tag, that the jenkins job will not be triggered, since the revisions are equal.
+ 
 
 
- * Plugin does allow self signed certificates and does not check the SSL Cert of `Jenkins.getInstance().getRootUrl();`
+`https://user:pass@jenkins.foo/jenkins/github-webhook-notifier-plugin/receive`
+
+
+
+<p align="center"><img src="https://codeclou.github.io/jenkins-github-webhook-notifier-plugin/img/github-webhook-settings.png" width="80%"></p>
+
+<p align="center"><img src="https://codeclou.github.io/jenkins-github-webhook-notifier-plugin/img/jenkins-build-by-commit-id.png" width="80%"></p>
+
+<p align="center"><img src="https://codeclou.github.io/jenkins-github-webhook-notifier-plugin/img/webhook-specific-commit-id.png" width="80%"></p>
 
 -----
 
