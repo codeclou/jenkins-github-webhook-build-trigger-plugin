@@ -10,6 +10,7 @@ jenkins-github-webhook-notifier-plugin
   * That way tags and branches are build even if they have the same revision
     * (a git push of a tag has a unique commit id but the same revision)
 
+
 ### Why?
 
 I needed something that forcefully triggers my Jenkins Jobs by passing the actual Git Commit ID.
@@ -20,15 +21,42 @@ and push that tag, that the jenkins job will not be triggered, since the revisio
  
 
 
-`https://user:pass@jenkins.foo/jenkins/github-webhook-notifier-plugin/receive`
 
 
+
+### GitHub Webhook Configuration
+
+ * **Payload URL**
+   * `https://user:pass@jenkins.foo/jenkins/github-webhook-notifier-plugin/receive`
+ * **Content type**
+   * `application/json`
+ * **Secret**
+   * empty.
+ * **Which events ...**
+   * Just the `push` event
 
 <p align="center"><img src="https://codeclou.github.io/jenkins-github-webhook-notifier-plugin/img/github-webhook-settings.png" width="80%"></p>
 
-<p align="center"><img src="https://codeclou.github.io/jenkins-github-webhook-notifier-plugin/img/jenkins-build-by-commit-id.png" width="80%"></p>
+
+### Jenkins Job Configuration
+
+
+<p align="center"><img src="https://codeclou.github.io/jenkins-github-webhook-notifier-plugin/img/jenkins-source-code-management.png" width="80%"></p>
+
+<p align="center"><img src="https://codeclou.github.io/jenkins-github-webhook-notifier-plugin/img/jenkins-build-trigger.png" width="80%"></p>
+	
+
+### Example Trigger
+
+We can see in the Response Tab of a GitHub Webhook Delivery that we notify the Git-Plugin with a specific sha1 commit id.
 
 <p align="center"><img src="https://codeclou.github.io/jenkins-github-webhook-notifier-plugin/img/webhook-specific-commit-id.png" width="80%"></p>
+
+And that triggers this exact id for the exact branch/tag that has been sent by the Webhook as JSON payload.
+
+<p align="center"><img src="https://codeclou.github.io/jenkins-github-webhook-notifier-plugin/img/jenkins-build-by-commit-id.png" width="80%"></p>
+
+
 
 -----
 
