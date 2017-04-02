@@ -41,7 +41,7 @@ Ok. Still here?! Then this might be for you :bowtie:
 
 ### Webhook - The only who tells the truth!
 
-![](https://codeclou.github.io/jenkins-github-webhook-build-trigger-plugin/img/webhook-payload---with-overlays.png)
+![](https://codeclou.github.io/jenkins-github-webhook-build-trigger-plugin/img/webhook-payload---with-overlays.png?v2)
 
 -----
 
@@ -85,7 +85,7 @@ When using matrix-based security the 'Anonymous' user needs 'Job' `build,discove
 ### GitHub Webhook Configuration
 
  * **Payload URL**
-   * `https://jenkins.foo/jenkins/github-webhook-notifier/receive`
+   * `https://jenkins.foo/jenkins/github-webhook-build-trigger/receive`
    * Note: The endpoint can be called without authentication.
  * **Content type**
    * `application/json`

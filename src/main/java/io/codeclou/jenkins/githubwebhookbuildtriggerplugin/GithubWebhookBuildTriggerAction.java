@@ -30,7 +30,7 @@ public class GithubWebhookBuildTriggerAction implements UnprotectedRootAction {
 
     @Override
     public String getUrlName() {
-        return "github-webhook-notifier";
+        return "github-webhook-build-trigger";
     }
 
     @Override
@@ -40,11 +40,11 @@ public class GithubWebhookBuildTriggerAction implements UnprotectedRootAction {
 
     @Override
     public String getDisplayName() {
-        return "github-webhook-notifier";
+        return "github-webhook-build-trigger";
     }
 
     /*
-     * http://jenkins.foo/github-webhook-notifier/receive
+     * http://jenkins.foo/github-webhook-build-trigger/receive
      */
     @RequirePOST
     public HttpResponse doReceive(HttpServletRequest request, StaplerRequest staplerRequest) throws IOException, ServletException {
