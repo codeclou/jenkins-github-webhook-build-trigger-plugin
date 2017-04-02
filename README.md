@@ -56,7 +56,7 @@ This is how you need to configure the GitHub Webhook in your repository 'Setting
  * **Which events ...**
    * Just the `push` event
 
-<p align="center"><img src="https://codeclou.github.io/jenkins-github-webhook-build-trigger-plugin/img/github-webhook-settings---with-overlays.png" width="80%"></p>
+<p align="center"><img src="https://codeclou.github.io/jenkins-github-webhook-build-trigger-plugin/img/github-webhook-settings---with-overlays.png?v4" width="80%"></p>
 
 
 ### Jenkins Job Configuration
