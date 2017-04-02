@@ -2,48 +2,30 @@
  * Licensed under MIT License
  * Copyright (c) 2017 Bernhard Grünewaldt
  */
-package io.codeclou.jenkins.githubwebhooknotifierplugin;
+package io.codeclou.jenkins.githubwebhookbuildtriggerplugin;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import hudson.Extension;
 import hudson.model.*;
-import hudson.scm.SCMRevisionState;
-import hudson.triggers.SCMTrigger;
-import hudson.triggers.Trigger;
 import hudson.util.HttpResponses;
-import io.codeclou.jenkins.githubwebhooknotifierplugin.config.GithubWebhookNotifierPluginBuilder;
-import io.codeclou.jenkins.githubwebhooknotifierplugin.webhooksecret.GitHubWebhookUtility;
+import io.codeclou.jenkins.githubwebhookbuildtriggerplugin.config.GithubWebhookBuildTriggerPluginBuilder;
+import io.codeclou.jenkins.githubwebhookbuildtriggerplugin.webhooksecret.GitHubWebhookUtility;
 import jenkins.model.Jenkins;
 import org.apache.commons.io.IOUtils;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.conn.ssl.NoopHostnameVerifier;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.ssl.SSLContextBuilder;
-import org.apache.http.ssl.TrustStrategy;
 import org.kohsuke.stapler.HttpResponse;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.interceptor.RequirePOST;
 
-import javax.net.ssl.SSLContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringWriter;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 
 @Extension
-public class GithubWebhookNotifyAction implements UnprotectedRootAction {
+public class GithubWebhookBuildTriggerAction implements UnprotectedRootAction {
 
     @Override
     public String getUrlName() {
@@ -68,35 +50,50 @@ public class GithubWebhookNotifyAction implements UnprotectedRootAction {
         StringWriter writer = new StringWriter();
         IOUtils.copy(request.getInputStream(), writer, "UTF-8");
         String requestBody = writer.toString();
-        String githubSignature = request.getHeader("x-hub-signature");
         Gson gson = new Gson();
+        StringBuilder info = new StringBuilder();
         try {
-            String webhookSecretAsConfiguredByUser = GithubWebhookNotifierPluginBuilder.DescriptorImpl.getDescriptor().getWebhookSecret();
+            //
+            // WEBHOOK SECRET
+            //
+            String githubSignature = request.getHeader("x-hub-signature");
+            String webhookSecretAsConfiguredByUser = GithubWebhookBuildTriggerPluginBuilder.DescriptorImpl.getDescriptor().getWebhookSecret();
             String webhookSecretMessage ="validating webhook payload against wevhook secret.";
+            info.append(">> webhook secret validation").append("\n");
             if (webhookSecretAsConfiguredByUser == null) {
-                webhookSecretMessage = "no webhook secret in global config specified. skipping validation.";
+                webhookSecretMessage = "   skipping validation since no webhook secret is configured in \n" +
+                                       "   'Jenkins' -> 'Configure' tab under 'Github Webhook Build Trigger' section.";
             } else {
                 Boolean isValid = GitHubWebhookUtility.verifySignature(requestBody, githubSignature, webhookSecretAsConfiguredByUser);
                 if (!isValid) {
-                    return HttpResponses.error(500, this.getTextEnvelopedInBanner("github webhook secret signature check failed. Check your webhook secret."));
+                    info.append(webhookSecretMessage).append("\n");
+                    return HttpResponses.error(500, this.getTextEnvelopedInBanner(info.toString() + "   ERROR: github webhook secret signature check failed. Check your webhook secret."));
                 }
+                webhookSecretMessage = "   ok. Webhook secret validates against " +  githubSignature + "\n";
             }
+            info.append(webhookSecretMessage).append("\n");
+            //
+            // PAYLOAD TO ENVVARS
+            //
             GithubWebhookPayload githubWebhookPayload = gson.fromJson(requestBody, GithubWebhookPayload.class);
-            GithubWebhookEnvironmentContributionAction environmentContributionAction = new GithubWebhookEnvironmentContributionAction(githubWebhookPayload);
+            EnvironmentContributionAction environmentContributionAction = new EnvironmentContributionAction(githubWebhookPayload);
+            //
+            // TRIGGER JOBS
+            //
             String jobNamePrefix = this.normalizeRepoFullName(githubWebhookPayload.getRepository().getFull_name());
             StringBuilder jobsTriggered = new StringBuilder();
             ArrayList<String> jobsAlreadyTriggered = new ArrayList<>();
             StringBuilder causeNote = new StringBuilder();
-            causeNote.append("github-webhook-notifier-plugin:\n");
+            causeNote.append("github-webhook-build-trigger-plugin:\n");
             causeNote.append(githubWebhookPayload.getAfter()).append("\n");
             causeNote.append(githubWebhookPayload.getRef()).append("\n");
             causeNote.append(githubWebhookPayload.getRepository().getClone_url());
             Cause cause = new Cause.RemoteCause("github.com", causeNote.toString());
             Collection<Job> jobs = Jenkins.getInstance().getAllItems(Job.class);
             if (jobs.isEmpty()) {
-                jobsTriggered.append("WARNING NO JOBS FOUND!\n");
-                jobsTriggered.append("If you are using matrix-based security, please give the following rights to 'Anonymous'.\n");
-                jobsTriggered.append("'Job' -> build, discover, read.\n");
+                jobsTriggered.append("   WARNING NO JOBS FOUND!\n");
+                jobsTriggered.append("      If you are using matrix-based security, please give the following rights to 'Anonymous'.\n");
+                jobsTriggered.append("      'Job' -> build, discover, read.\n");
             }
             for (Job job: jobs) {
                 if (job.getName().startsWith(jobNamePrefix) && ! jobsAlreadyTriggered.contains(job.getName())) {
@@ -106,16 +103,17 @@ public class GithubWebhookNotifyAction implements UnprotectedRootAction {
                     projectScheduable.scheduleBuild(0, cause, environmentContributionAction);
                 }
             }
-            StringBuilder info = new StringBuilder();
+            //
+            // WRITE ADDITONAL INFO
+            //
             info.append(">> webhook content to env vars").append("\n");
-            info.append("webhooksecret: ").append(webhookSecretMessage).append("\n");
             info.append(environmentContributionAction.getEnvVarInfo());
             info.append("\n");
             info.append(">> jobs triggered with name matching '").append(jobNamePrefix).append("*'").append("\n");
             info.append(jobsTriggered.toString());
             return HttpResponses.plainText(this.getTextEnvelopedInBanner(info.toString()));
         } catch (JsonSyntaxException ex) {
-            return HttpResponses.error(500, this.getTextEnvelopedInBanner("github webhook json invalid"));
+            return HttpResponses.error(500, this.getTextEnvelopedInBanner(info.toString() + "   ERROR: github webhook json invalid"));
         }
     }
 
@@ -129,7 +127,7 @@ public class GithubWebhookNotifyAction implements UnprotectedRootAction {
     private String getTextEnvelopedInBanner(String text) {
         StringBuilder banner = new StringBuilder();
         banner.append("----------------------------------------------------------------------------------\n");
-        banner.append("github-webhook-notifier-plugin").append("\n");
+        banner.append("github-webhook-build-trigger-plugin").append("\n");
         banner.append("----------------------------------------------------------------------------------\n");
         banner.append(text);
         banner.append("\n----------------------------------------------------------------------------------\n");

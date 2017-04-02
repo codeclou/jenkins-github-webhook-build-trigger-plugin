@@ -1,6 +1,6 @@
-# jenkins-github-webhook-notifier-plugin
+# jenkins-github-webhook-build-trigger-plugin
 
-jenkins-github-webhook-notifier-plugin
+
 
 ### What it does
 

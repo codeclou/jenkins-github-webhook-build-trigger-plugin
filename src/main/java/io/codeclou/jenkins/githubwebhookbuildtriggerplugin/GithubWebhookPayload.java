@@ -2,7 +2,7 @@
  * Licensed under MIT License
  * Copyright (c) 2017 Bernhard Grünewaldt
  */
-package io.codeclou.jenkins.githubwebhooknotifierplugin;
+package io.codeclou.jenkins.githubwebhookbuildtriggerplugin;
 
 /**
  * GitHub Webhook JSON Pojo with only the parts that are interesting for us.

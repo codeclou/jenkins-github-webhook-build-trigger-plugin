@@ -2,13 +2,17 @@
  * Licensed under MIT License
  * Copyright (c) 2017 Bernhard Grünewaldt
  */
-package io.codeclou.jenkins.githubwebhooknotifierplugin.webhooksecret;
+package io.codeclou.jenkins.githubwebhookbuildtriggerplugin.webhooksecret;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
+/*
+ * Verify HMAC sha1 'x-hub-signature' Header against Request Payload
+ * See: https://developer.github.com/webhooks/securing/
+ */
 public class GitHubWebhookUtility {
 
     private static final String HMAC_SHA1_ALGORITHM = "HmacSHA1";

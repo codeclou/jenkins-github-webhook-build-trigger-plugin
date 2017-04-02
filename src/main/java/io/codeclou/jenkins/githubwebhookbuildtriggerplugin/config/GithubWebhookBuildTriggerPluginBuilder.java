@@ -2,7 +2,7 @@
  * Licensed under MIT License
  * Copyright (c) 2017 Bernhard Grünewaldt
  */
-package io.codeclou.jenkins.githubwebhooknotifierplugin.config;
+package io.codeclou.jenkins.githubwebhookbuildtriggerplugin.config;
 
 import hudson.Extension;
 import hudson.model.AbstractProject;
@@ -11,8 +11,10 @@ import hudson.tasks.Builder;
 import net.sf.json.JSONObject;
 import org.kohsuke.stapler.StaplerRequest;
 
-
-public class GithubWebhookNotifierPluginBuilder extends Builder {
+/*
+ * Enable Plugin to store global config under "Jenkins" => "configure" tab.
+ */
+public class GithubWebhookBuildTriggerPluginBuilder extends Builder {
 
     @Extension
     public static final class DescriptorImpl extends BuildStepDescriptor<Builder> {
@@ -40,7 +42,7 @@ public class GithubWebhookNotifierPluginBuilder extends Builder {
 
         @Override
         public String getDisplayName() {
-            return "GithubWebhookNotifierPlugin";
+            return "GithubWebhookBuildTriggerPlugin";
         }
 
         @Override
