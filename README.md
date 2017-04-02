@@ -2,6 +2,8 @@
 
 Trigger Jenkins Jobs via GitHub Webhooks and provide Webhook Payload Information as Environment Variables inside your Job.
 
+:sparkles: Download: [`github-webhook-notifier-plugin-1.0.0.hpi.zip`](https://github.com/codeclou/jenkins-github-webhook-build-trigger-plugin/releases/download/1.0.0/github-webhook-notifier-plugin-1.0.0.hpi.zip)
+
 -----
 
 &nbsp;
