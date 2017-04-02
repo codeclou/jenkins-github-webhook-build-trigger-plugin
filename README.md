@@ -1,15 +1,62 @@
 # jenkins-github-webhook-build-trigger-plugin
 
+Trigger Jenkins Jobs via GitHub Webhooks and provide Webhook Payload Information as Environment Variables inside your Job.
+
+-----
+
+&nbsp;
+
+### Is this for me?
+
+If you can agree with all statements, then this is for you.
+
+ * [Bash](http://tiswww.case.edu/php/chet/bash/bashtop.html) is love. Bash is live.
+ * Using the [git commandline client](https://git-scm.com/book/en/v2/Getting-Started-The-Command-Line) in Jenkins Jobs:
+   * gives me the control I want and need.
+   * replaces all other mostly defunct and/or bloated Git Plugins.
+ * I only use GitHub.com for my repositorys.
+ * I only 'git clone' via `https://` URLs.
+ * I work with git branches and tags.
+ * I want my Jenkins jobs triggered at every push (branch or tag).
+ * I want my Jenkins jobs triggered exclusively via GitHub Webhook Push Events.
+ * I use Linux to run Jenkins.
+ * I want my Jenkins jobs triggered automatically by convention of configuration job naming.
+
+Ok. Still here?! Then this might be for you :bowtie:
+
+-----
+
+&nbsp;
+
+### How it works in three sentences
+
+  * It parses the actual GitHub Webhook JSON Payload and extracts its information.
+  * It triggers all Jenkins jobs matching `{repositoryOwner}---{repositoryName}.*`
+  * It injects Environment Variables into the job run for you to determine what branch and revision is to clone.
 
 
-### What it does
+-----
 
-  * It parses the actual GitHub Webhook JSON Payload
-  * Extracts the Repository Clone URL and the Git Commit ID
-  * It triggers the Git-Plugins notifyTrigger with the fixed commit id
-  * That way tags and branches are build even if they have the same revision
-    * (a git push of a tag has a unique commit id but the same revision)
+&nbsp;
 
+### How to build the plugin
+
+Jave Oracle Java 8 and Apache Maven 3 installed. And then build like this:
+
+```bash
+git clone https://github.com/codeclou/jenkins-github-webhook-build-trigger-plugin.git
+cd jenkins-github-webhook-build-trigger-plugin
+mvn clean
+mvn compile
+mvn hpi:hpi
+```
+
+Now you should have a file called `./target/github-webhook-notifier-plugin.hpi` which
+you can upload manually to Jenkins under 'Manage Plugins' → 'Advanced' → 'Upload Plugin'.
+
+-----
+
+&nbsp;
 
 ### Why?
 
