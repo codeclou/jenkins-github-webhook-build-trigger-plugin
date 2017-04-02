@@ -58,28 +58,39 @@ This is how you need to configure the GitHub Webhook in your repository 'Setting
 
 <p align="center"><img src="https://codeclou.github.io/jenkins-github-webhook-build-trigger-plugin/img/github-webhook-settings---with-overlays.png?v4" width="80%"></p>
 
+-----
+
+&nbsp;
 
 ### Jenkins Job Configuration
 
+Configure your Jenkins Job like this so that it gets triggered by the Webhook events.
 
-<p align="center"><img src="https://codeclou.github.io/jenkins-github-webhook-build-trigger-plugin/img/jenkins-source-code-management.png" width="80%"></p>
+First of all the **naming conventions** is `{repositoryOwner}---{repositoryName}.*`. 
+That means if your repository is `https://github.com/codeclou/test-webhook.git` then your job must be called
+`codeclou---test-webhook`. You can have multiple jobs if you want for example a job that handles releases, just call it `codeclou---test-webhook-release`.
 
-<p align="center"><img src="https://codeclou.github.io/jenkins-github-webhook-build-trigger-plugin/img/jenkins-build-trigger.png" width="80%"></p>
-	
+We do not use 'Source Code Management' and we do not need to specify some 'Build Triggers' since it is all done
+magically by convention over configuration.
 
-### Example Trigger
-
-We can see in the Response Tab of a GitHub Webhook Delivery that we notify the Git-Plugin with a specific sha1 commit id.
-
-<p align="center"><img src="https://codeclou.github.io/jenkins-github-webhook-build-trigger-plugin/img/webhook-specific-commit-id.png" width="80%"></p>
-
-And that triggers this exact id for the exact branch/tag that has been sent by the Webhook as JSON payload.
-
-<p align="center"><img src="https://codeclou.github.io/jenkins-github-webhook-build-trigger-plugin/img/jenkins-build-by-commit-id.png" width="80%"></p>
+<p align="center"><img src="https://codeclou.github.io/jenkins-github-webhook-build-trigger-plugin/img/jenkins-job-config---with-overlays.png" width="80%"></p>
 
 
 
+Available variables:
+```bash
+#!/bin/bash
 
+echo "GWBT_COMMIT_BEFORE:  $GWBT_COMMIT_BEFORE"
+echo "GWBT_COMMIT_AFTER:   $GWBT_COMMIT_AFTER"
+echo "GWBT_REF:            $GWBT_REF"
+echo "GWBT_TAG:            $GWBT_TAG"
+echo "GWBT_BRANCH:         $GWBT_BRANCH"
+echo "GWBT_REPO_CLONE_URL: $GWBT_REPO_CLONE_URL"
+echo "GWBT_REPO_HTML_URL:  $GWBT_REPO_HTML_URL"
+echo "GWBT_REPO_FULL_NAME: $GWBT_REPO_FULL_NAME"
+echo "GWBT_REPO_NAME:      $GWBT_REPO_NAME"
+```
 -----
 
 &nbsp;
