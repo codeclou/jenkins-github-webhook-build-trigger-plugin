@@ -86,7 +86,7 @@ That means if your repository is `https://github.com/codeclou/test-webhook.git` 
 We do not use 'Source Code Management' and we do not need to specify some 'Build Triggers' since it is all done
 magically by convention over configuration.
 
-<p align="center"><img src="https://codeclou.github.io/jenkins-github-webhook-build-trigger-plugin/img/jenkins-job-config---with-overlays.png" width="80%"></p>
+<p align="center"><img src="https://codeclou.github.io/jenkins-github-webhook-build-trigger-plugin/img/jenkins-job-config---with-overlays.png?v2" width="80%"></p>
 
 &nbsp;
 
@@ -190,6 +190,17 @@ git clone --single-branch \
           source
 ```
 
+-----
+
+&nbsp;
+
+### Jenkins Job Example Triggered by Webhook Push
+
+This is how it looks, when a Job gets triggered by a GitHub Webhook push.
+ 
+<p align="center"><img src="https://codeclou.github.io/jenkins-github-webhook-build-trigger-plugin/img/job-triggered---with-overlay.png" width="80%"></p>
+
+&nbsp;
 
 -----
 
