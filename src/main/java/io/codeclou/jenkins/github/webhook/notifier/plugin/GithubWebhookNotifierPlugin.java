@@ -7,6 +7,7 @@ package io.codeclou.jenkins.github.webhook.notifier.plugin;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import hudson.Plugin;
+import hudson.model.UnprotectedRootAction;
 import hudson.util.HttpResponses;
 import jenkins.model.Jenkins;
 import org.apache.commons.io.IOUtils;
@@ -33,7 +34,22 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
 
-public class GithubWebhookNotifierPlugin extends Plugin {
+public class GithubWebhookNotifierPlugin extends Plugin implements UnprotectedRootAction {
+
+    @Override
+    public String getUrlName() {
+        return "github-webhook-notifier-plugin";
+    }
+
+    @Override
+    public String getIconFileName() {
+        return null;
+    }
+
+    @Override
+    public String getDisplayName() {
+        return "github-webhook-notifier-plugin";
+    }
 
     /*
      * http://jenkins.foo/plugin/github-webhook-notifier-plugin/receive
