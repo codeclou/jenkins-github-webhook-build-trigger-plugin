@@ -171,7 +171,7 @@ bash jenkins.sh
 ```
 
 
-&nsbp;
+&nbsp;
 
 **Example Build Script Snippet for Cloning Private Repositories**
 
