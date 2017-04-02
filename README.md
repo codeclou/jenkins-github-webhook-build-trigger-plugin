@@ -58,6 +58,19 @@ This is how you need to configure the GitHub Webhook in your repository 'Setting
 
 <p align="center"><img src="https://codeclou.github.io/jenkins-github-webhook-build-trigger-plugin/img/github-webhook-settings---with-overlays.png?v4" width="80%"></p>
 
+
+-----
+
+&nbsp;
+
+### Jenkins Global Configuration
+
+You can configure the Webhook Secret Globally via 'Manage Jenkins' → 'Configure System' → 'Github Webhook Notifier Plugin'.
+
+<p align="center"><img src="https://codeclou.github.io/jenkins-github-webhook-build-trigger-plugin/img/jenkins-global-config---with-overlay.png" width="80%"></p>
+
+If you do not configure it, webhook secret sent by GitHub will be ignored.
+
 -----
 
 &nbsp;
