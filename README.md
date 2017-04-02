@@ -20,6 +20,9 @@ to a state where if your job just build your `master` Branch and you create a ta
 and push that tag, that the jenkins job will not be triggered, since the revisions are equal.
  
 
+### NOTE
+
+When using matrix-based security the 'Anonymous' user needs 'Job' `build,discover,read` rights.
 
 
 

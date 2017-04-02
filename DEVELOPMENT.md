@@ -22,7 +22,7 @@ Howto manually checkout certain branch at specific revision
 
 ```
 # Clone develop branch
-git clone --single-branch --branch develop https://github.com/codeclou/test-webhook.git .
+git clone --single-branch --branch develop https://github.com/codeclou/test-webhook.git foo
 # Switch to revision
 git reset --hard 495140cf2b763b8bc3821e25b4c26dd1273d6206
 ```

@@ -7,7 +7,10 @@ package io.codeclou.jenkins.githubwebhooknotifierplugin;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import hudson.Extension;
-import hudson.model.UnprotectedRootAction;
+import hudson.model.*;
+import hudson.scm.SCMRevisionState;
+import hudson.triggers.SCMTrigger;
+import hudson.triggers.Trigger;
 import hudson.util.HttpResponses;
 import jenkins.model.Jenkins;
 import org.apache.commons.io.IOUtils;
@@ -32,6 +35,9 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 
 @Extension
 public class GithubWebhookNotifyAction implements UnprotectedRootAction {
@@ -56,65 +62,60 @@ public class GithubWebhookNotifyAction implements UnprotectedRootAction {
      */
     @RequirePOST
     public HttpResponse doReceive(HttpServletRequest request, StaplerRequest staplerRequest) throws IOException, ServletException {
-        String jenkinsRootUrl = Jenkins.getInstance().getRootUrl(); // will return something like: http://localhost:8080/jenkins/
         BufferedReader reader = request.getReader();
         Gson gson = new Gson();
         try {
             GithubWebhookPayload githubWebhookPayload = gson.fromJson(reader, GithubWebhookPayload.class);
-            // Trigger Git-Plugins notify push SCM Polling Endpoint
-            String gitPluginNotifyUrl = jenkinsRootUrl +
-                    "git/notifyCommit?url=" +
-                    githubWebhookPayload.getRepository().getClone_url() +
-                    "&branches=" +
-                    this.normalizeBranchNameForJenkins(githubWebhookPayload.getRef()) +
-                    "&sha1=" +
-                    githubWebhookPayload.getAfter();
-            SSLContext sslContext = new SSLContextBuilder()
-                    .loadTrustMaterial(null, new TrustStrategy() {
-                        @Override
-                        public boolean isTrusted(X509Certificate[] certificate, String authType) throws CertificateException {
-                            return true;
-                        }
-                    }).build();
-            CloseableHttpClient client = HttpClients.custom()
-                    .setSSLContext(sslContext)
-                    .setSSLHostnameVerifier(new NoopHostnameVerifier())
-                    .build();
-            HttpGet httpGet = new HttpGet(gitPluginNotifyUrl);
-            CloseableHttpResponse response = client.execute(httpGet);
-            int statusCode = response.getStatusLine().getStatusCode();
-            String gitNotificationResponse = IOUtils.toString(response.getEntity().getContent(), "UTF-8");
-            StringBuilder responseText = new StringBuilder();
-            responseText.append("----------------------------------------------------------------------------------\n");
-            responseText.append("github-webhook-notifier-plugin - parsed webhook payload:\n");
-            responseText.append("   ref:       ").append(githubWebhookPayload.getRef()).append("\n");
-            responseText.append("   before:    ").append(githubWebhookPayload.getBefore()).append("\n");
-            responseText.append("   after:     ").append(githubWebhookPayload.getAfter()).append("\n");
-            responseText.append("   clone_url: ").append(githubWebhookPayload.getRepository().getClone_url()).append("\n");
-            responseText.append("----------------------------------------------------------------------------------\n");
-            responseText.append(">> REQUEST\n").append(gitPluginNotifyUrl).append("\n\n");
-            responseText.append("<< RESPONSE HTTP ").append(statusCode).append("\n");
-            responseText.append(gitNotificationResponse);
-            if (statusCode != 200) {
-                return HttpResponses.error(400, responseText.toString());
+            GithubWebhookEnvironmentContributionAction environmentContributionAction = new GithubWebhookEnvironmentContributionAction(githubWebhookPayload);
+            String jobNamePrefix = this.normalizeRepoFullName(githubWebhookPayload.getRepository().getFull_name());
+            StringBuilder jobsTriggered = new StringBuilder();
+            ArrayList<String> jobsAlreadyTriggered = new ArrayList<>();
+            StringBuilder causeNote = new StringBuilder();
+            causeNote.append("github-webhook-notifier-plugin:\n");
+            causeNote.append(githubWebhookPayload.getAfter()).append("\n");
+            causeNote.append(githubWebhookPayload.getRef()).append("\n");
+            causeNote.append(githubWebhookPayload.getRepository().getClone_url());
+            Cause cause = new Cause.RemoteCause("github.com", causeNote.toString());
+            Collection<Job> jobs = Jenkins.getInstance().getAllItems(Job.class);
+            if (jobs.isEmpty()) {
+                jobsTriggered.append("WARNING NO JOBS FOUND!\n");
+                jobsTriggered.append("If you are using matrix-based security, please give the following rights to 'Anonymous'.\n");
+                jobsTriggered.append("'Job' -> build, discover, read.\n");
             }
-            return HttpResponses.plainText(responseText.toString());
+            for (Job job: jobs) {
+                if (job.getName().startsWith(jobNamePrefix) && ! jobsAlreadyTriggered.contains(job.getName())) {
+                    jobsTriggered.append("   ").append(job.getName()).append("\n");
+                    jobsAlreadyTriggered.add(job.getName());
+                    AbstractProject projectScheduable = (AbstractProject) job;
+                    projectScheduable.scheduleBuild(0, cause, environmentContributionAction);
+                }
+            }
+            StringBuilder info = new StringBuilder();
+            info.append(">> webhook content to env vars").append("\n");
+            info.append(environmentContributionAction.getEnvVarInfo());
+            info.append("\n");
+            info.append(">> jobs triggered with name matching '").append(jobNamePrefix).append("*'").append("\n");
+            info.append(jobsTriggered.toString());
+            return HttpResponses.plainText(this.getTextEnvelopedInBanner(info.toString()));
         } catch (JsonSyntaxException ex) {
-            return HttpResponses.error(500, "github-webhook-notifier-plugin: github webhook json invalid");
-        } catch (NoSuchAlgorithmException ex) {
-            return HttpResponses.error(500, "github-webhook-notifier-plugin: internal error NoSuchAlgorithmException");
-        } catch (KeyStoreException ex) {
-            return HttpResponses.error(500, "github-webhook-notifier-plugin: internal error KeyStoreException");
-        } catch (KeyManagementException ex) {
-            return HttpResponses.error(500, "github-webhook-notifier-plugin: internal error KeyManagementException");
+            return HttpResponses.error(500, this.getTextEnvelopedInBanner("github webhook json invalid"));
         }
     }
 
     /*
-     * converts "refs/heads/develop" to "origin/develop"
+     * converts "codeclou/foo" to "codeclou---foo"
      */
-    private String normalizeBranchNameForJenkins(String branchname) {
-        return branchname.replace("refs/heads/", "origin/");
+    private String normalizeRepoFullName(String reponame) {
+        return reponame.replace("/", "---");
     }
 
+    private String getTextEnvelopedInBanner(String text) {
+        StringBuilder banner = new StringBuilder();
+        banner.append("----------------------------------------------------------------------------------\n");
+        banner.append("github-webhook-notifier-plugin").append("\n");
+        banner.append("----------------------------------------------------------------------------------\n");
+        banner.append(text);
+        banner.append("\n----------------------------------------------------------------------------------\n");
+        return banner.toString();
+    }
 }
