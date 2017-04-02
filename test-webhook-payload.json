@@ -1,29 +1,29 @@
 {
   "ref": "refs/heads/master",
-  "before": "495140cf2b763b8bc3821e25b4c26dd1273d6206",
-  "after": "3be1cb4b6b86533b5dab2b0083fa9fb8b401b430",
+  "before": "3be1cb4b6b86533b5dab2b0083fa9fb8b401b430",
+  "after": "2c9522c9618864808eaaede8353dbeafb996c605",
   "created": false,
   "deleted": false,
   "forced": false,
   "base_ref": null,
-  "compare": "https://github.com/codeclou/test-webhook/compare/b18bd676208c...79ee8604ed23",
+  "compare": "https://github.com/codeclou/test-webhook/compare/3be1cb4b6b86...2c9522c96188",
   "commits": [
     {
-      "id": "79ee8604ed236fa87e4184c28ce59f5bffbe13bc",
-      "tree_id": "dacc30b085e2452dd6076204ab7c36b03fbb0ef6",
+      "id": "2c9522c9618864808eaaede8353dbeafb996c605",
+      "tree_id": "6a2a4a86b6c6076c8a54d05bab30680c4e0b6456",
       "distinct": true,
-      "message": "fix pom.xml version fix",
-      "timestamp": "2017-04-01T17:23:34+02:00",
-      "url": "https://github.com/codeclou/test-webhook/commit/79ee8604ed236fa87e4184c28ce59f5bffbe13bc",
+      "message": "foo",
+      "timestamp": "2017-04-02T15:21:54+02:00",
+      "url": "https://github.com/codeclou/test-webhook/commit/2c9522c9618864808eaaede8353dbeafb996c605",
       "author": {
-        "name": "Fox Forrester",
-        "email": "fox@forrest",
-        "username": "fox"
+        "name": "Bernhard Grünewaldt",
+        "email": "github@gruenewaldt.net",
+        "username": "clouless"
       },
       "committer": {
-        "name": "Fox Forrester",
-        "email": "fox@forrest",
-        "username": "fox"
+        "name": "Bernhard Grünewaldt",
+        "email": "github@gruenewaldt.net",
+        "username": "clouless"
       },
       "added": [
 
@@ -32,26 +32,26 @@
 
       ],
       "modified": [
-        "jenkins.sh"
+        "dummyfile.txt"
       ]
     }
   ],
   "head_commit": {
-    "id": "79ee8604ed236fa87e4184c28ce59f5bffbe13bc",
-    "tree_id": "dacc30b085e2452dd6076204ab7c36b03fbb0ef6",
+    "id": "2c9522c9618864808eaaede8353dbeafb996c605",
+    "tree_id": "6a2a4a86b6c6076c8a54d05bab30680c4e0b6456",
     "distinct": true,
-    "message": "fix pom.xml version fix",
-    "timestamp": "2017-04-01T17:23:34+02:00",
-    "url": "https://github.com/codeclou/test-webhook/commit/79ee8604ed236fa87e4184c28ce59f5bffbe13bc",
+    "message": "foo",
+    "timestamp": "2017-04-02T15:21:54+02:00",
+    "url": "https://github.com/codeclou/test-webhook/commit/2c9522c9618864808eaaede8353dbeafb996c605",
     "author": {
-      "name": "Fox Forrester",
-      "email": "fox@forrest",
-      "username": "fox"
+      "name": "Bernhard Grünewaldt",
+      "email": "github@gruenewaldt.net",
+      "username": "clouless"
     },
     "committer": {
-      "name": "Fox Forrester",
-      "email": "fox@forrest",
-      "username": "fox"
+      "name": "Bernhard Grünewaldt",
+      "email": "github@gruenewaldt.net",
+      "username": "clouless"
     },
     "added": [
 
@@ -60,19 +60,19 @@
 
     ],
     "modified": [
-      "jenkins.sh"
+      "dummyfile.txt"
     ]
   },
   "repository": {
-    "id": 66210545,
+    "id": 86972993,
     "name": "test-webhook",
     "full_name": "codeclou/test-webhook",
     "owner": {
       "name": "codeclou",
-      "email": "int@codeclou.io",
+      "email": "",
       "login": "codeclou",
-      "id": 17686535,
-      "avatar_url": "https://avatars2.githubusercontent.com/u/17686535?v=3",
+      "id": 15359905,
+      "avatar_url": "https://avatars2.githubusercontent.com/u/15359905?v=3",
       "gravatar_id": "",
       "url": "https://api.github.com/users/codeclou",
       "html_url": "https://github.com/codeclou",
@@ -85,12 +85,12 @@
       "repos_url": "https://api.github.com/users/codeclou/repos",
       "events_url": "https://api.github.com/users/codeclou/events{/privacy}",
       "received_events_url": "https://api.github.com/users/codeclou/received_events",
-      "type": "User",
+      "type": "Organization",
       "site_admin": false
     },
-    "private": true,
+    "private": false,
     "html_url": "https://github.com/codeclou/test-webhook",
-    "description": null,
+    "description": "test repository",
     "fork": false,
     "url": "https://github.com/codeclou/test-webhook",
     "forks_url": "https://api.github.com/repos/codeclou/test-webhook/forks",
@@ -129,22 +129,22 @@
     "labels_url": "https://api.github.com/repos/codeclou/test-webhook/labels{/name}",
     "releases_url": "https://api.github.com/repos/codeclou/test-webhook/releases{/id}",
     "deployments_url": "https://api.github.com/repos/codeclou/test-webhook/deployments",
-    "created_at": 1471799402,
-    "updated_at": "2017-03-24T14:11:34Z",
-    "pushed_at": 1491060219,
+    "created_at": 1491121491,
+    "updated_at": "2017-04-02T08:26:38Z",
+    "pushed_at": 1491139319,
     "git_url": "git://github.com/codeclou/test-webhook.git",
     "ssh_url": "git@github.com:codeclou/test-webhook.git",
     "clone_url": "https://github.com/codeclou/test-webhook.git",
     "svn_url": "https://github.com/codeclou/test-webhook",
     "homepage": null,
-    "size": 101039,
+    "size": 2,
     "stargazers_count": 0,
     "watchers_count": 0,
-    "language": "Java",
+    "language": "Shell",
     "has_issues": true,
     "has_projects": true,
     "has_downloads": true,
-    "has_wiki": false,
+    "has_wiki": true,
     "has_pages": false,
     "forks_count": 0,
     "mirror_url": null,
@@ -154,28 +154,42 @@
     "watchers": 0,
     "default_branch": "master",
     "stargazers": 0,
-    "master_branch": "master"
+    "master_branch": "master",
+    "organization": "codeclou"
   },
   "pusher": {
-    "name": "fox",
-    "email": "fox@forrest"
+    "name": "clouless",
+    "email": "github@gruenewaldt.net"
+  },
+  "organization": {
+    "login": "codeclou",
+    "id": 15359905,
+    "url": "https://api.github.com/orgs/codeclou",
+    "repos_url": "https://api.github.com/orgs/codeclou/repos",
+    "events_url": "https://api.github.com/orgs/codeclou/events",
+    "hooks_url": "https://api.github.com/orgs/codeclou/hooks",
+    "issues_url": "https://api.github.com/orgs/codeclou/issues",
+    "members_url": "https://api.github.com/orgs/codeclou/members{/member}",
+    "public_members_url": "https://api.github.com/orgs/codeclou/public_members{/member}",
+    "avatar_url": "https://avatars2.githubusercontent.com/u/15359905?v=3",
+    "description": ""
   },
   "sender": {
-    "login": "fox",
+    "login": "clouless",
     "id": 12599965,
     "avatar_url": "https://avatars3.githubusercontent.com/u/12599965?v=3",
     "gravatar_id": "",
-    "url": "https://api.github.com/users/fox",
-    "html_url": "https://github.com/fox",
-    "followers_url": "https://api.github.com/users/fox/followers",
-    "following_url": "https://api.github.com/users/fox/following{/other_user}",
-    "gists_url": "https://api.github.com/users/fox/gists{/gist_id}",
-    "starred_url": "https://api.github.com/users/fox/starred{/owner}{/repo}",
-    "subscriptions_url": "https://api.github.com/users/fox/subscriptions",
-    "organizations_url": "https://api.github.com/users/fox/orgs",
-    "repos_url": "https://api.github.com/users/fox/repos",
-    "events_url": "https://api.github.com/users/fox/events{/privacy}",
-    "received_events_url": "https://api.github.com/users/fox/received_events",
+    "url": "https://api.github.com/users/clouless",
+    "html_url": "https://github.com/clouless",
+    "followers_url": "https://api.github.com/users/clouless/followers",
+    "following_url": "https://api.github.com/users/clouless/following{/other_user}",
+    "gists_url": "https://api.github.com/users/clouless/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/clouless/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/clouless/subscriptions",
+    "organizations_url": "https://api.github.com/users/clouless/orgs",
+    "repos_url": "https://api.github.com/users/clouless/repos",
+    "events_url": "https://api.github.com/users/clouless/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/clouless/received_events",
     "type": "User",
     "site_admin": false
   }

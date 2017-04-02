@@ -1,10 +1,13 @@
+/*
+ * Licensed under MIT License
+ * Copyright (c) 2017 Bernhard Grünewaldt
+ */
 package io.codeclou.jenkins.githubwebhooknotifierplugin.config;
 
 import hudson.Extension;
 import hudson.model.AbstractProject;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Builder;
-import hudson.tasks.Publisher;
 import net.sf.json.JSONObject;
 import org.kohsuke.stapler.StaplerRequest;
 

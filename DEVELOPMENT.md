@@ -5,9 +5,12 @@ mvn compile && rm -rf work/ && mvn hpi:run
 
 curl -X POST \
     -H "Content-Type: application/json" \
+    -H "x-hub-signature: sha1=5b8a54ee48efb1fbe06e3e4fc5d120680eaa2a22" \
     -d @test-webhook-payload.json \
     http://localhost:8080/jenkins/github-webhook-notifier/receive
 ```
+
+ * With GitHub Secret being: `foobar23`
 
 ### Build hpi
 

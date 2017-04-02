@@ -12,6 +12,8 @@ import hudson.scm.SCMRevisionState;
 import hudson.triggers.SCMTrigger;
 import hudson.triggers.Trigger;
 import hudson.util.HttpResponses;
+import io.codeclou.jenkins.githubwebhooknotifierplugin.config.GithubWebhookNotifierPluginBuilder;
+import io.codeclou.jenkins.githubwebhooknotifierplugin.webhooksecret.GitHubWebhookUtility;
 import jenkins.model.Jenkins;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -30,6 +32,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -62,10 +65,23 @@ public class GithubWebhookNotifyAction implements UnprotectedRootAction {
      */
     @RequirePOST
     public HttpResponse doReceive(HttpServletRequest request, StaplerRequest staplerRequest) throws IOException, ServletException {
-        BufferedReader reader = request.getReader();
+        StringWriter writer = new StringWriter();
+        IOUtils.copy(request.getInputStream(), writer, "UTF-8");
+        String requestBody = writer.toString();
+        String githubSignature = request.getHeader("x-hub-signature");
         Gson gson = new Gson();
         try {
-            GithubWebhookPayload githubWebhookPayload = gson.fromJson(reader, GithubWebhookPayload.class);
+            String webhookSecretAsConfiguredByUser = GithubWebhookNotifierPluginBuilder.DescriptorImpl.getDescriptor().getWebhookSecret();
+            String webhookSecretMessage ="validating webhook payload against wevhook secret.";
+            if (webhookSecretAsConfiguredByUser == null) {
+                webhookSecretMessage = "no webhook secret in global config specified. skipping validation.";
+            } else {
+                Boolean isValid = GitHubWebhookUtility.verifySignature(requestBody, githubSignature, webhookSecretAsConfiguredByUser);
+                if (!isValid) {
+                    return HttpResponses.error(500, this.getTextEnvelopedInBanner("github webhook secret signature check failed. Check your webhook secret."));
+                }
+            }
+            GithubWebhookPayload githubWebhookPayload = gson.fromJson(requestBody, GithubWebhookPayload.class);
             GithubWebhookEnvironmentContributionAction environmentContributionAction = new GithubWebhookEnvironmentContributionAction(githubWebhookPayload);
             String jobNamePrefix = this.normalizeRepoFullName(githubWebhookPayload.getRepository().getFull_name());
             StringBuilder jobsTriggered = new StringBuilder();
@@ -92,6 +108,7 @@ public class GithubWebhookNotifyAction implements UnprotectedRootAction {
             }
             StringBuilder info = new StringBuilder();
             info.append(">> webhook content to env vars").append("\n");
+            info.append("webhooksecret: ").append(webhookSecretMessage).append("\n");
             info.append(environmentContributionAction.getEnvVarInfo());
             info.append("\n");
             info.append(">> jobs triggered with name matching '").append(jobNamePrefix).append("*'").append("\n");
