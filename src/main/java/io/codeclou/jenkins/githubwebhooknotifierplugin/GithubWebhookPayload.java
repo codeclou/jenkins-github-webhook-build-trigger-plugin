@@ -2,8 +2,12 @@
  * Licensed under MIT License
  * Copyright (c) 2017 Bernhard Grünewaldt
  */
-package io.codeclou.jenkins.github.webhook.notifier.plugin;
+package io.codeclou.jenkins.githubwebhooknotifierplugin;
 
+/**
+ * GitHub Webhook JSON Pojo with only the parts that are interesting for us.
+ * See: https://developer.github.com/webhooks/#payloads
+ */
 public class GithubWebhookPayload {
 
     private String ref;

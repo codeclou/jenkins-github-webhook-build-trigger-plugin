@@ -27,11 +27,12 @@ and push that tag, that the jenkins job will not be triggered, since the revisio
 ### GitHub Webhook Configuration
 
  * **Payload URL**
-   * `https://user:pass@jenkins.foo/jenkins/github-webhook-notifier-plugin/receive`
+   * `https://jenkins.foo/jenkins/github-webhook-notifier/receive`
+   * Note: The endpoint can be called without authentication.
  * **Content type**
    * `application/json`
  * **Secret**
-   * empty.
+   * Choose a good secret, at best a random sha512 hash
  * **Which events ...**
    * Just the `push` event
 

@@ -2,11 +2,11 @@
  * Licensed under MIT License
  * Copyright (c) 2017 Bernhard Grünewaldt
  */
-package io.codeclou.jenkins.github.webhook.notifier.plugin;
+package io.codeclou.jenkins.githubwebhooknotifierplugin;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import hudson.Plugin;
+import hudson.Extension;
 import hudson.model.UnprotectedRootAction;
 import hudson.util.HttpResponses;
 import jenkins.model.Jenkins;
@@ -33,12 +33,12 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
-
-public class GithubWebhookNotifierPlugin extends Plugin implements UnprotectedRootAction {
+@Extension
+public class GithubWebhookNotifyAction implements UnprotectedRootAction {
 
     @Override
     public String getUrlName() {
-        return "github-webhook-notifier-plugin";
+        return "github-webhook-notifier";
     }
 
     @Override
@@ -48,11 +48,11 @@ public class GithubWebhookNotifierPlugin extends Plugin implements UnprotectedRo
 
     @Override
     public String getDisplayName() {
-        return "github-webhook-notifier-plugin";
+        return "github-webhook-notifier";
     }
 
     /*
-     * http://jenkins.foo/plugin/github-webhook-notifier-plugin/receive
+     * http://jenkins.foo/github-webhook-notifier/receive
      */
     @RequirePOST
     public HttpResponse doReceive(HttpServletRequest request, StaplerRequest staplerRequest) throws IOException, ServletException {
@@ -66,7 +66,7 @@ public class GithubWebhookNotifierPlugin extends Plugin implements UnprotectedRo
                     "git/notifyCommit?url=" +
                     githubWebhookPayload.getRepository().getClone_url() +
                     "&branches=" +
-                    githubWebhookPayload.getRef() +
+                    this.normalizeBranchNameForJenkins(githubWebhookPayload.getRef()) +
                     "&sha1=" +
                     githubWebhookPayload.getAfter();
             SSLContext sslContext = new SSLContextBuilder()
@@ -84,19 +84,37 @@ public class GithubWebhookNotifierPlugin extends Plugin implements UnprotectedRo
             CloseableHttpResponse response = client.execute(httpGet);
             int statusCode = response.getStatusLine().getStatusCode();
             String gitNotificationResponse = IOUtils.toString(response.getEntity().getContent(), "UTF-8");
-            String responseText = "ok triggered: " + gitPluginNotifyUrl + "\nstatus: " + statusCode + "\n\n" + gitNotificationResponse;
+            StringBuilder responseText = new StringBuilder();
+            responseText.append("----------------------------------------------------------------------------------\n");
+            responseText.append("github-webhook-notifier-plugin - parsed webhook payload:\n");
+            responseText.append("   ref:       ").append(githubWebhookPayload.getRef()).append("\n");
+            responseText.append("   before:    ").append(githubWebhookPayload.getBefore()).append("\n");
+            responseText.append("   after:     ").append(githubWebhookPayload.getAfter()).append("\n");
+            responseText.append("   clone_url: ").append(githubWebhookPayload.getRepository().getClone_url()).append("\n");
+            responseText.append("----------------------------------------------------------------------------------\n");
+            responseText.append(">> REQUEST\n").append(gitPluginNotifyUrl).append("\n\n");
+            responseText.append("<< RESPONSE HTTP ").append(statusCode).append("\n");
+            responseText.append(gitNotificationResponse);
             if (statusCode != 200) {
-                return HttpResponses.error(400, responseText);
+                return HttpResponses.error(400, responseText.toString());
             }
-            return HttpResponses.plainText(responseText);
+            return HttpResponses.plainText(responseText.toString());
         } catch (JsonSyntaxException ex) {
-            return HttpResponses.error(500, "json invalid");
+            return HttpResponses.error(500, "github-webhook-notifier-plugin: github webhook json invalid");
         } catch (NoSuchAlgorithmException ex) {
-            return HttpResponses.error(500, "NoSuchAlgorithmException");
+            return HttpResponses.error(500, "github-webhook-notifier-plugin: internal error NoSuchAlgorithmException");
         } catch (KeyStoreException ex) {
-            return HttpResponses.error(500, "KeyStoreException");
+            return HttpResponses.error(500, "github-webhook-notifier-plugin: internal error KeyStoreException");
         } catch (KeyManagementException ex) {
-            return HttpResponses.error(500, "KeyManagementException");
+            return HttpResponses.error(500, "github-webhook-notifier-plugin: internal error KeyManagementException");
         }
     }
+
+    /*
+     * converts "refs/heads/develop" to "origin/develop"
+     */
+    private String normalizeBranchNameForJenkins(String branchname) {
+        return branchname.replace("refs/heads/", "origin/");
+    }
+
 }
