@@ -19,6 +19,7 @@ import org.kohsuke.stapler.interceptor.RequirePOST;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.swing.plaf.basic.BasicToolTipUI;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -51,7 +52,11 @@ public class GithubWebhookBuildTriggerAction implements UnprotectedRootAction {
         IOUtils.copy(request.getInputStream(), writer, "UTF-8");
         String requestBody = writer.toString();
         Gson gson = new Gson();
+        GithubWebhookPayload githubWebhookPayload = gson.fromJson(requestBody, GithubWebhookPayload.class);
         StringBuilder info = new StringBuilder();
+        if (githubWebhookPayload == null) {
+            return HttpResponses.error(500, this.getTextEnvelopedInBanner("   ERROR: payload json is empty at least requestBody is empty!"));
+        }
         try {
             //
             // WEBHOOK SECRET
@@ -71,11 +76,11 @@ public class GithubWebhookBuildTriggerAction implements UnprotectedRootAction {
                 }
                 webhookSecretMessage = "   ok. Webhook secret validates against " +  githubSignature + "\n";
             }
-            info.append(webhookSecretMessage).append("\n");
+            info.append(webhookSecretMessage).append("\n\n");
             //
             // PAYLOAD TO ENVVARS
             //
-            GithubWebhookPayload githubWebhookPayload = gson.fromJson(requestBody, GithubWebhookPayload.class);
+
             EnvironmentContributionAction environmentContributionAction = new EnvironmentContributionAction(githubWebhookPayload);
             //
             // TRIGGER JOBS
@@ -92,7 +97,8 @@ public class GithubWebhookBuildTriggerAction implements UnprotectedRootAction {
             Collection<Job> jobs = Jenkins.getInstance().getAllItems(Job.class);
             if (jobs.isEmpty()) {
                 jobsTriggered.append("   WARNING NO JOBS FOUND!\n");
-                jobsTriggered.append("      If you are using matrix-based security, please give the following rights to 'Anonymous'.\n");
+                jobsTriggered.append("      You either have no jobs or if you are using matrix-based security,\n");
+                jobsTriggered.append("      please give the following rights to 'Anonymous':\n");
                 jobsTriggered.append("      'Job' -> build, discover, read.\n");
             }
             for (Job job: jobs) {
@@ -126,8 +132,8 @@ public class GithubWebhookBuildTriggerAction implements UnprotectedRootAction {
 
     private String getTextEnvelopedInBanner(String text) {
         StringBuilder banner = new StringBuilder();
-        banner.append("----------------------------------------------------------------------------------\n");
-        banner.append("github-webhook-build-trigger-plugin").append("\n");
+        banner.append("\n----------------------------------------------------------------------------------\n");
+        banner.append("   github-webhook-build-trigger-plugin").append("\n");
         banner.append("----------------------------------------------------------------------------------\n");
         banner.append(text);
         banner.append("\n----------------------------------------------------------------------------------\n");
