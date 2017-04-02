@@ -42,6 +42,8 @@ Ok. Still here?! Then this might be for you :bowtie:
 
 ### GitHub Webhook Configuration
 
+This is how you need to configure the GitHub Webhook in your repository 'Settings'.
+
  * **Payload URL**
    * `https://jenkins/github-webhook-build-trigger/receive`
    * Note: 
@@ -54,7 +56,7 @@ Ok. Still here?! Then this might be for you :bowtie:
  * **Which events ...**
    * Just the `push` event
 
-<p align="center"><img src="https://codeclou.github.io/jenkins-github-webhook-build-trigger-plugin/img/github-webhook-settings.png" width="80%"></p>
+<p align="center"><img src="https://codeclou.github.io/jenkins-github-webhook-build-trigger-plugin/img/github-webhook-settings---with-overlays.png" width="80%"></p>
 
 
 ### Jenkins Job Configuration
