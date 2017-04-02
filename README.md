@@ -14,7 +14,7 @@ If you can agree with all statements, then this is for you.
  * Using the [git commandline client](https://git-scm.com/book/en/v2/Getting-Started-The-Command-Line) in Jenkins Jobs:
    * gives me the control I want and need.
    * replaces all other mostly defunct and/or bloated Git Plugins.
- * I only use GitHub.com for my repositorys.
+ * I only use GitHub.com for my repositories.
  * I only 'git clone' via `https://` URLs.
  * I work with git branches and tags.
  * I want my Jenkins jobs triggered at every push (branch or tag).
@@ -30,10 +30,18 @@ Ok. Still here?! Then this might be for you :bowtie:
 
 ### How it works in three sentences
 
-  * It parses the actual GitHub Webhook JSON Payload and extracts its information.
-  * It triggers all Jenkins jobs matching `{repositoryOwner}---{repositoryName}.*`
-  * It injects Environment Variables into the job run for you to determine what branch and revision is to clone.
+  * Plugin REST Endpoint parses the actual GitHub Webhook JSON Payload and extracts its information.
+  * It then triggers all Jenkins jobs matching `{repositoryOwner}---{repositoryName}.*`
+  * Lastly it injects Environment Variables into the job run for you to determine what branch and revision is to clone.
 
+
+-----
+
+&nbsp;
+
+### Webhook - The only who tells the truth!
+
+![](https://codeclou.github.io/jenkins-github-webhook-notifier-plugin/img/webhook-payload---with-overlays.png)
 
 -----
 
