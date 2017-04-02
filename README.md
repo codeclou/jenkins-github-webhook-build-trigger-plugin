@@ -75,7 +75,7 @@ magically by convention over configuration.
 
 <p align="center"><img src="https://codeclou.github.io/jenkins-github-webhook-build-trigger-plugin/img/jenkins-job-config---with-overlays.png" width="80%"></p>
 
-&nsbp;
+&nbsp;
 
 **Available Environment Variables from Webhook**
 
@@ -92,7 +92,7 @@ magically by convention over configuration.
 | `$GWBT_REPO_NAME` | GitHub repository full name |  `{repoName}` <br> e.g. `jenkins-github-webhook-build-trigger-plugin` |
 
 
-&nsbp;
+&nbsp;
 
 **Example Build Script Snippet**
 
