@@ -41,7 +41,7 @@ Ok. Still here?! Then this might be for you :bowtie:
 
 ### Webhook - The only who tells the truth!
 
-![](https://codeclou.github.io/jenkins-github-webhook-notifier-plugin/img/webhook-payload---with-overlays.png)
+![](https://codeclou.github.io/jenkins-github-webhook-build-trigger-plugin/img/webhook-payload---with-overlays.png)
 
 -----
 
@@ -94,26 +94,26 @@ When using matrix-based security the 'Anonymous' user needs 'Job' `build,discove
  * **Which events ...**
    * Just the `push` event
 
-<p align="center"><img src="https://codeclou.github.io/jenkins-github-webhook-notifier-plugin/img/github-webhook-settings.png" width="80%"></p>
+<p align="center"><img src="https://codeclou.github.io/jenkins-github-webhook-build-trigger-plugin/img/github-webhook-settings.png" width="80%"></p>
 
 
 ### Jenkins Job Configuration
 
 
-<p align="center"><img src="https://codeclou.github.io/jenkins-github-webhook-notifier-plugin/img/jenkins-source-code-management.png" width="80%"></p>
+<p align="center"><img src="https://codeclou.github.io/jenkins-github-webhook-build-trigger-plugin/img/jenkins-source-code-management.png" width="80%"></p>
 
-<p align="center"><img src="https://codeclou.github.io/jenkins-github-webhook-notifier-plugin/img/jenkins-build-trigger.png" width="80%"></p>
+<p align="center"><img src="https://codeclou.github.io/jenkins-github-webhook-build-trigger-plugin/img/jenkins-build-trigger.png" width="80%"></p>
 	
 
 ### Example Trigger
 
 We can see in the Response Tab of a GitHub Webhook Delivery that we notify the Git-Plugin with a specific sha1 commit id.
 
-<p align="center"><img src="https://codeclou.github.io/jenkins-github-webhook-notifier-plugin/img/webhook-specific-commit-id.png" width="80%"></p>
+<p align="center"><img src="https://codeclou.github.io/jenkins-github-webhook-build-trigger-plugin/img/webhook-specific-commit-id.png" width="80%"></p>
 
 And that triggers this exact id for the exact branch/tag that has been sent by the Webhook as JSON payload.
 
-<p align="center"><img src="https://codeclou.github.io/jenkins-github-webhook-notifier-plugin/img/jenkins-build-by-commit-id.png" width="80%"></p>
+<p align="center"><img src="https://codeclou.github.io/jenkins-github-webhook-build-trigger-plugin/img/jenkins-build-by-commit-id.png" width="80%"></p>
 
 
 
