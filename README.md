@@ -1,4 +1,4 @@
-# jenkins-github-webhook-build-trigger-plugin
+[![](https://codeclou.github.io/jenkins-github-webhook-build-trigger-plugin/img/logo.png)](https://github.com/codeclou/jenkins-github-webhook-build-trigger-plugin)
 
 Trigger Jenkins Jobs via GitHub Webhooks and provide Webhook Payload Information as Environment Variables inside your Job.
 
