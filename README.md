@@ -50,7 +50,6 @@ This is how you need to configure the GitHub Webhook in your repository 'Setting
    * `https://jenkins/github-webhook-build-trigger/receive`
    * Note: 
      * The endpoint can be called without authentication.
-     * When using matrix-based security 'Anonymous' needs 'Job' → `build,discover,read` permissions.
  * **Content type**
    * `application/json`
  * **Secret**
@@ -67,11 +66,15 @@ This is how you need to configure the GitHub Webhook in your repository 'Setting
 
 ### Jenkins Global Configuration
 
-You can configure the Webhook Secret Globally via 'Manage Jenkins' → 'Configure System' → 'Github Webhook Notifier Plugin'.
+You can configure the **Webhook Secret** Globally via 'Manage Jenkins' → 'Configure System' → 'Github Webhook Notifier Plugin'. If you do not configure it, the webhook secret sent by GitHub will be ignored.
 
 <p align="center"><img src="https://codeclou.github.io/jenkins-github-webhook-build-trigger-plugin/img/jenkins-global-config---with-overlay.png" width="80%"></p>
 
-If you do not configure it, webhook secret sent by GitHub will be ignored.
+&nbsp;
+
+Concerning 'Manage Jenkins' → **'Configure Global Security'**, 'Prevent Cross Site Request Forgery exploits' must be disabled.
+When using matrix-based security 'Anonymous' needs 'Job' → `build,discover,read` permissions.
+
 
 -----
 
@@ -212,7 +215,7 @@ This is how it looks, when a Job gets triggered by a GitHub Webhook push.
 
 **Build Plugin**
 
-Jave Oracle Java 8 and Apache Maven 3 installed. And then build like this:
+Have Jave Oracle Java 8 and Apache Maven 3 installed. And then build like this:
 
 ```bash
 git clone https://github.com/codeclou/jenkins-github-webhook-build-trigger-plugin.git
