@@ -66,7 +66,7 @@ This is how you need to configure the GitHub Webhook in your repository 'Setting
 
 ### Jenkins Global Configuration
 
-You can configure the **Webhook Secret** Globally via 'Manage Jenkins' → 'Configure System' → 'Github Webhook Notifier Plugin'. If you do not configure it, the webhook secret sent by GitHub will be ignored.
+You can configure the **Webhook Secret** Globally via 'Manage Jenkins' → 'Configure System' → 'Github Webhook Notifier Plugin'. If you do not configure it, HTTP 500 will be the response from the API.
 
 <p align="center"><img src="https://codeclou.github.io/jenkins-github-webhook-build-trigger-plugin/img/jenkins-global-config---with-overlay.png" width="80%"></p>
 
