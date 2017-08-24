@@ -195,6 +195,37 @@ git clone --single-branch \
           source
 ```
 
+&nbsp;
+
+**Usage with Pipeline Jobs**
+
+Since version 1.1.0 [Pipeline Job Types](https://jenkins.io/doc/book/pipeline/) (NOT MultiBranch Pipeline) are supported.
+
+Make sure you have at least the following Plugins installed
+
+```
+Pipeline: Groovy
+Pipeline: Job
+Pipeline: API
+Pipeline: Step API
+Pipeline: Stage Step
+Pipeline: Basic Steps
+Pipeline: Model API
+```
+
+A simple **`Jenkinsfile`** could look like this:
+
+```
+node {
+    stage('foo') {
+        sh 'git clone --single-branch --branch ${env.GWBT_BRANCH}  https://github.com/${env.GWBT_REPO_FULL_NAME}.git source'
+        dir('source') {
+            sh 'npm install'
+        }
+    }
+}
+```
+
 -----
 
 &nbsp;

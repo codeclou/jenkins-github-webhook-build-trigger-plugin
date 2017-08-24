@@ -5,10 +5,11 @@
 package io.codeclou.jenkins.githubwebhookbuildtriggerplugin;
 
 import hudson.EnvVars;
-import hudson.model.AbstractBuild;
-import hudson.model.EnvironmentContributingAction;
+import hudson.model.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /*
@@ -48,7 +49,7 @@ public class EnvironmentContributionAction implements EnvironmentContributingAct
      * converts "refs/heads/develop" to "develop"
      */
     private String normalizeBranchNameOrEmptyString(String branchname) {
-        if (branchname.startsWith("refs/heads/")) {
+        if (branchname != null && branchname.startsWith("refs/heads/")) {
             return branchname.replace("refs/heads/", "");
         }
         return "";
@@ -58,7 +59,7 @@ public class EnvironmentContributionAction implements EnvironmentContributingAct
      * converts "refs/tags/1.0.0" to "1.0.0"
      */
     private String normalizeTagNameOrEmptyString(String tagname) {
-        if (tagname.startsWith("refs/tags/")) {
+        if (tagname != null && tagname.startsWith("refs/tags/")) {
             return tagname.replace("refs/tags/", "");
         }
         return "";
@@ -89,5 +90,20 @@ public class EnvironmentContributionAction implements EnvironmentContributingAct
         if (environmentVariables != null) {
             env.putAll(environmentVariables);
         }
+    }
+
+    /**
+     * Since WorkflowJob does not support EnvironmentContributionAction yet,
+     * we need a ParametersAction filled with List ParameterValue
+     * See: https://github.com/jenkinsci/workflow-job-plugin/blob/124b171b76394728f9c8504829cf6857abc8bdb5/src/main/java/org/jenkinsci/plugins/workflow/job/WorkflowRun.java#L435
+     */
+    public ParametersAction transform() {
+        List<ParameterValue> paramValues = new ArrayList<>();
+        List<String> safeParams = new ArrayList<>();
+        for (Map.Entry<String, String> envVar : environmentVariables.entrySet()) {
+            paramValues.add(new StringParameterValue(envVar.getKey(), envVar.getValue(), envVar.getValue()));
+            safeParams.add(envVar.getKey());
+        }
+        return new ParametersAction(paramValues, safeParams);
     }
 }

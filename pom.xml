@@ -6,12 +6,12 @@
   <parent>
     <groupId>org.jenkins-ci.plugins</groupId>
     <artifactId>plugin</artifactId>
-    <version>2.25</version>
+    <version>2.33</version>
     <relativePath/>
   </parent>
   <groupId>io.codeclou.jenkins.github.webhook.notifier.plugin</groupId>
   <artifactId>github-webhook-notifier-plugin</artifactId>
-  <version>1.0.1</version>
+  <version>1.1.0</version>
   <packaging>hpi</packaging>
 
   <name>github-webhook-notifier-plugin</name>
@@ -52,5 +52,15 @@
       <artifactId>commons-io</artifactId>
       <version>2.5</version>
     </dependency>
+    <dependency>
+      <groupId>org.jenkins-ci.plugins.workflow</groupId>
+      <artifactId>workflow-job</artifactId>
+      <version>2.5</version>
+      <optional>true</optional>
+    </dependency>
   </dependencies>
+  <!-- https://wiki.jenkins.io/display/JENKINS/Choosing+Jenkins+version+to+build+against -->
+  <properties>
+    <jenkins.version>2.73</jenkins.version>
+  </properties>
 </project>

@@ -2,7 +2,13 @@
 
 ```bash
 mvn compile && rm -rf work/ && mvn hpi:run
+// configure GitHub Secret to `foobar23` via webui
+```
 
+
+**Testcase: Push Event**
+
+```bash
 curl -X POST \
     -H "Content-Type: application/json" \
     -H "x-hub-signature: sha1=5b8a54ee48efb1fbe06e3e4fc5d120680eaa2a22" \
@@ -10,7 +16,31 @@ curl -X POST \
     http://localhost:8080/jenkins/github-webhook-build-trigger/receive
 ```
 
- * With GitHub Secret being: `foobar23`
+&nbsp;
+
+
+**Testcase: Ping Event**
+ 
+Initial webhook created request. 
+Only fired once when you setup the webhook on github. See: https://developer.github.com/webhooks/#ping-event
+
+```bash
+curl -X POST \
+    -H "Content-Type: application/json" \
+    -H "x-hub-signature: sha1=c203f51e9317264c6716ee0c6fed59d604674885" \
+    -d @test-webhook-init-payload.json \
+    http://localhost:8080/jenkins/github-webhook-build-trigger/receive
+```
+
+&nbsp;
+
+**x-hub-signature**
+
+Create an sha1 hash for a payload.json:
+
+```bash
+cat test-webhook-init-payload.json | openssl dgst -sha1 -hmac "foobar23" 
+```
 
 ### Build hpi
 

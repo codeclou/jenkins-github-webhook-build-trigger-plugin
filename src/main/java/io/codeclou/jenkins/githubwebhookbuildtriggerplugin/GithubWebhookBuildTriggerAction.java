@@ -6,27 +6,30 @@ package io.codeclou.jenkins.githubwebhookbuildtriggerplugin;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import hudson.EnvVars;
 import hudson.Extension;
 import hudson.model.*;
+import hudson.model.queue.QueueTaskFuture;
 import hudson.util.HttpResponses;
 import io.codeclou.jenkins.githubwebhookbuildtriggerplugin.config.GithubWebhookBuildTriggerPluginBuilder;
 import io.codeclou.jenkins.githubwebhookbuildtriggerplugin.webhooksecret.GitHubWebhookUtility;
 import jenkins.model.Jenkins;
 import org.apache.commons.io.IOUtils;
+import org.jenkinsci.plugins.workflow.job.WorkflowJob;
+import org.jenkinsci.plugins.workflow.job.WorkflowRun;
 import org.kohsuke.stapler.HttpResponse;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.interceptor.RequirePOST;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.swing.plaf.basic.BasicToolTipUI;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 
 @Extension
-public class GithubWebhookBuildTriggerAction implements UnprotectedRootAction {
+public class GithubWebhookBuildTriggerAction implements UnprotectedRootAction, EnvironmentContributingAction {
 
     @Override
     public String getUrlName() {
@@ -65,7 +68,7 @@ public class GithubWebhookBuildTriggerAction implements UnprotectedRootAction {
             String webhookSecretAsConfiguredByUser = GithubWebhookBuildTriggerPluginBuilder.DescriptorImpl.getDescriptor().getWebhookSecret();
             String webhookSecretMessage ="validating webhook payload against wevhook secret.";
             info.append(">> webhook secret validation").append("\n");
-            if (webhookSecretAsConfiguredByUser == null) {
+            if (webhookSecretAsConfiguredByUser == null || webhookSecretAsConfiguredByUser.isEmpty()) {
                 webhookSecretMessage = "   skipping validation since no webhook secret is configured in \n" +
                                        "   'Jenkins' -> 'Configure' tab under 'Github Webhook Build Trigger' section.";
             } else {
@@ -77,11 +80,23 @@ public class GithubWebhookBuildTriggerAction implements UnprotectedRootAction {
                 webhookSecretMessage = "   ok. Webhook secret validates against " +  githubSignature + "\n";
             }
             info.append(webhookSecretMessage).append("\n\n");
+
+            //
+            // CHECK IF INITIAL REQUEST (see test-webhook-init-payload.json)
+            // See: https://developer.github.com/webhooks/#ping-event
+            //
+            if (githubWebhookPayload.getHook_id() != null) {
+                info.append(">> ping request received: your webhook with ID ");
+                info.append(githubWebhookPayload.getHook_id());
+                info.append(" is working :)\n");
+                return HttpResponses.plainText(this.getTextEnvelopedInBanner(info.toString()));
+            }
+
             //
             // PAYLOAD TO ENVVARS
             //
-
             EnvironmentContributionAction environmentContributionAction = new EnvironmentContributionAction(githubWebhookPayload);
+
             //
             // TRIGGER JOBS
             //
@@ -103,10 +118,25 @@ public class GithubWebhookBuildTriggerAction implements UnprotectedRootAction {
             }
             for (Job job: jobs) {
                 if (job.getName().startsWith(jobNamePrefix) && ! jobsAlreadyTriggered.contains(job.getName())) {
-                    jobsTriggered.append("   ").append(job.getName()).append("\n");
                     jobsAlreadyTriggered.add(job.getName());
-                    AbstractProject projectScheduable = (AbstractProject) job;
-                    projectScheduable.scheduleBuild(0, cause, environmentContributionAction);
+                    if (job instanceof WorkflowJob) {
+                        WorkflowJob wjob = (WorkflowJob) job;
+                        if (wjob.isBuildable()) {
+                            jobsTriggered.append("   WORKFLOWJOB> ").append(job.getName()).append(" TRIGGERED\n");
+                            wjob.addAction(environmentContributionAction.transform());
+                            wjob.scheduleBuild(0, cause);
+                        } else {
+                            jobsTriggered.append("   WORKFLOWJOB> ").append(job.getName()).append(" NOT BUILDABLE. SKIPPING.\n");
+                        }
+                    } else {
+                        AbstractProject projectScheduable = (AbstractProject) job;
+                        if (job.isBuildable()) {
+                            jobsTriggered.append("   CLASSICJOB>  ").append(job.getName()).append(" TRIGGERED\n");
+                            projectScheduable.scheduleBuild(0, cause, environmentContributionAction);
+                        } else {
+                            jobsTriggered.append("   CLASSICJOB>  ").append(job.getName()).append(" NOT BUILDABLE. SKIPPING.\n");
+                        }
+                    }
                 }
             }
             //
@@ -138,5 +168,10 @@ public class GithubWebhookBuildTriggerAction implements UnprotectedRootAction {
         banner.append(text);
         banner.append("\n----------------------------------------------------------------------------------\n");
         return banner.toString();
+    }
+
+    @Override
+    public void buildEnvVars(AbstractBuild<?, ?> abstractBuild, EnvVars envVars) {
+
     }
 }
