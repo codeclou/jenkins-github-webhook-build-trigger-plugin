@@ -6,17 +6,14 @@ package io.codeclou.jenkins.githubwebhookbuildtriggerplugin;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import hudson.EnvVars;
 import hudson.Extension;
 import hudson.model.*;
-import hudson.model.queue.QueueTaskFuture;
 import hudson.util.HttpResponses;
 import io.codeclou.jenkins.githubwebhookbuildtriggerplugin.config.GithubWebhookBuildTriggerPluginBuilder;
 import io.codeclou.jenkins.githubwebhookbuildtriggerplugin.webhooksecret.GitHubWebhookUtility;
 import jenkins.model.Jenkins;
 import org.apache.commons.io.IOUtils;
 import org.jenkinsci.plugins.workflow.job.WorkflowJob;
-import org.jenkinsci.plugins.workflow.job.WorkflowRun;
 import org.kohsuke.stapler.HttpResponse;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.interceptor.RequirePOST;
@@ -29,7 +26,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 @Extension
-public class GithubWebhookBuildTriggerAction implements UnprotectedRootAction, EnvironmentContributingAction {
+public class GithubWebhookBuildTriggerAction implements UnprotectedRootAction {
 
     @Override
     public String getUrlName() {
@@ -123,8 +120,7 @@ public class GithubWebhookBuildTriggerAction implements UnprotectedRootAction, E
                         WorkflowJob wjob = (WorkflowJob) job;
                         if (wjob.isBuildable()) {
                             jobsTriggered.append("   WORKFLOWJOB> ").append(job.getName()).append(" TRIGGERED\n");
-                            wjob.addAction(environmentContributionAction.transform());
-                            wjob.scheduleBuild(0, cause);
+                            wjob.scheduleBuild2(0, environmentContributionAction.transform(), new CauseAction(cause));
                         } else {
                             jobsTriggered.append("   WORKFLOWJOB> ").append(job.getName()).append(" NOT BUILDABLE. SKIPPING.\n");
                         }
@@ -170,8 +166,4 @@ public class GithubWebhookBuildTriggerAction implements UnprotectedRootAction, E
         return banner.toString();
     }
 
-    @Override
-    public void buildEnvVars(AbstractBuild<?, ?> abstractBuild, EnvVars envVars) {
-
-    }
 }
