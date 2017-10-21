@@ -2,7 +2,7 @@
 
 Trigger Jenkins Jobs via GitHub Webhooks and provide Webhook Payload Information as Environment Variables inside your Job.
 
-:sparkles: Download: [`github-webhook-notifier-plugin-1.1.1.hpi.zip`](https://github.com/codeclou/jenkins-github-webhook-build-trigger-plugin/releases/download/1.1.1/github-webhook-notifier-plugin-1.1.1.hpi.zip)
+:sparkles: Download: [`github-webhook-notifier-plugin-1.2.0.hpi.zip`](https://github.com/codeclou/jenkins-github-webhook-build-trigger-plugin/releases/download/1.1.1/github-webhook-notifier-plugin-1.2.0.hpi.zip)
 
 -----
 
@@ -72,7 +72,7 @@ You can configure the **Webhook Secret** Globally via 'Manage Jenkins' → 'Conf
 
 &nbsp;
 
-Concerning 'Manage Jenkins' → **'Configure Global Security'**, 'Prevent Cross Site Request Forgery exploits' must be disabled.
+Concerning 'Manage Jenkins' → **'Configure Global Security'**, 'Prevent Cross Site Request Forgery exploits' can be enabled (the plugin will still work).
 When using matrix-based security 'Anonymous' needs 'Job' → `build,discover,read` permissions.
 
 
