@@ -17,9 +17,11 @@ import org.jenkinsci.plugins.workflow.job.WorkflowJob;
 import org.kohsuke.stapler.HttpResponse;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.interceptor.RequirePOST;
-
+import hudson.security.csrf.CrumbExclusion;
+import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -28,9 +30,11 @@ import java.util.Collection;
 @Extension
 public class GithubWebhookBuildTriggerAction implements UnprotectedRootAction {
 
+    private static final String URL_NAME = "github-webhook-build-trigger";
+
     @Override
     public String getUrlName() {
-        return "github-webhook-build-trigger";
+        return URL_NAME;
     }
 
     @Override
@@ -40,7 +44,7 @@ public class GithubWebhookBuildTriggerAction implements UnprotectedRootAction {
 
     @Override
     public String getDisplayName() {
-        return "github-webhook-build-trigger";
+        return URL_NAME;
     }
 
     /*
@@ -166,4 +170,21 @@ public class GithubWebhookBuildTriggerAction implements UnprotectedRootAction {
         return banner.toString();
     }
 
+    @Extension
+    public static class TriggerActionCrumbExclusion extends CrumbExclusion {
+
+        @Override
+        public boolean process(HttpServletRequest req, HttpServletResponse resp, FilterChain chain) throws IOException, ServletException {
+            String pathInfo = req.getPathInfo();
+            if (pathInfo != null && pathInfo.contains(getExclusionPath())) {
+                chain.doFilter(req, resp);
+                return true;
+            }
+            return false;
+        }
+
+        public String getExclusionPath() {
+            return "/" + URL_NAME + "/";
+        }
+    }
 }
