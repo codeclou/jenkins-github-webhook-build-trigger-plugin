@@ -16,12 +16,21 @@ public class GithubWebhookPayload {
      */
     private Long hook_id;
     private String ref;
+    private String ref_type;
     private String before;
     private String after;
     private GithubWebhookPayloadRepository repository;
 
     public GithubWebhookPayload() {
 
+    }
+
+    public String getRef_type() {
+        return ref_type;
+    }
+
+    public void setRef_type(String ref_type) {
+        this.ref_type = ref_type;
     }
 
     public String getRef() {
