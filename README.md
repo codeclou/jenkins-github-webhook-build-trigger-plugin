@@ -22,7 +22,7 @@ If you can agree with all statements, then this is for you.
  * I want my Jenkins jobs triggered at every push (branch or tag).
  * I want my Jenkins jobs triggered exclusively via GitHub Webhook Push Events.
  * I use Linux to run Jenkins.
- * I want my Jenkins jobs triggered automatically by convention of configuration job naming.
+ * I want my Jenkins jobs triggered automatically by convention over configuration job naming.
 
 Ok. Still here?! Then this might be for you :bowtie:
 
