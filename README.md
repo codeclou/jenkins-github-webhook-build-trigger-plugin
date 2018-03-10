@@ -99,7 +99,7 @@ magically by convention over configuration.
 
 | Variable | Description | Example |
 |----------|-------------|---------|
-| `$GWBT_COMMIT_BEFORE` | `before` commit id as sha1 hash from Webhook Payload, specifying the commit revision the repository was in before the event happened.  | `3be1cb4b6b86533b5dab2b0083fa9fb8b401b430` or <br> `0000000000000000000` if push event was a tag |
+| `$GWBT_COMMIT_BEFORE` | `before` commit id as sha1 hash from Webhook Payload, specifying the commit revision the repository was in before the event happened.  | `3be1cb4b6b86533b5dab2b0083fa9fb8b401b430` or <br> `0000000000000000000000000000000000000000` if push event was a tag |
 | `$GWBT_COMMIT_AFTER` | `after` commit id as sha1 hash from Webhook Payload, specifying the commit revision the repository is now in. Meaning the current revision. | `2c9522c9618864808eaaede8353dbeafb996c605` |
 | `$GWBT_REF` | `ref` from Webhook Payload representing the branch or tag that was pushed | `refs/heads/{branchname}` or <br> `refs/tags/{tagname}` |
 | `$GWBT_TAG` | short tag name derived from `ref` and stripped of clutter. | When `ref` is `refs/tags/1.0.0` then it is `1.0.0`. <br>When `ref` is not a tag, it is empty! |
