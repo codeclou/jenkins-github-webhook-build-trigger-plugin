@@ -145,13 +145,21 @@ then
     exit 1
 fi
 
+#
+# Do not build "delete branch push event"
+#
+if [ "$GWBT_COMMIT_AFTER" == "0000000000000000000000000000000000000000" ]
+then
+    echo "DO NOT REACT ON BRANCH DELETE PUSHES"
+    exit 0
+fi
 
 #
 # Only Build Branches
 #
 if [ -z "$GWBT_BRANCH" ]
 then
-	echo "THIS PUSH IS NOT INSIDE A BRANCH. I DON'T LIKE IT!"
+    echo "THIS PUSH IS NOT INSIDE A BRANCH. I DON'T LIKE IT!"
     exit 1
 fi
 
