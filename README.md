@@ -244,7 +244,7 @@ node {
     stage('inform github') {
       sh 'curl -X POST -H \'Authorization: token ' + env.GITHUB_AUTH_TOKEN + '\' ' +
          ' https://api.github.com/repos/${GWBT_REPO_FULL_NAME}/statuses/${GWBT_COMMIT_AFTER} ' +
-         ' -d \'{ "state": "pending", "target_url": "' + env.BUILD_URL + '", "description": "The build has started" }\' '
+         ' -d \'{ "state": "pending", "context": "Jenkins", "target_url": "' + env.BUILD_URL + '", "description": "The build has started" }\' '
     }
     stage('foo') {
       sh 'git clone --single-branch --branch ${env.GWBT_BRANCH}  https://github.com/${env.GWBT_REPO_FULL_NAME}.git source'
@@ -259,18 +259,23 @@ node {
     if (currentBuild.result == 'FAILURE') {
       sh 'curl -X POST -H \'Authorization: token ' + env.GITHUB_AUTH_TOKEN + '\' ' +
          ' https://api.github.com/repos/${GWBT_REPO_FULL_NAME}/statuses/${GWBT_COMMIT_AFTER} ' +
-         ' -d \'{ "state": "failure", "target_url": "' + env.BUILD_URL + '", "description": "The build has failed" }\' '
+         ' -d \'{ "state": "failure", "context": "Jenkins", "target_url": "' + env.BUILD_URL + '", "description": "The build has failed" }\' '
     } else {
       sh 'curl -X POST -H \'Authorization: token ' + env.GITHUB_AUTH_TOKEN + '\' ' +
          ' https://api.github.com/repos/${GWBT_REPO_FULL_NAME}/statuses/${GWBT_COMMIT_AFTER} ' +
-         ' -d \'{ "state": "success", "target_url": "' + env.BUILD_URL + '", "description": "The build was a success" }\' '
+         ' -d \'{ "state": "success", "context": "Jenkins", "target_url": "' + env.BUILD_URL + '", "description": "The build was a success" }\' '
     }
   }
 }
 ```
 
+A pull request will now get status updates for each commit.
 
 <p align="center"><img src="https://codeclou.github.io/jenkins-github-webhook-build-trigger-plugin/img/pull-request-checks---with-overlays.png?v2" width="80%"></p>
+
+You can further enforce that a status check has to be successful in order to merge a PR. Go to  via 'Settings' → 'Branches' → 'Add Branch protection rule'.
+
+tbd
 
 -----
 
