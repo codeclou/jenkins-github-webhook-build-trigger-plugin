@@ -215,20 +215,20 @@ Pipeline: Model API
 
 A simple **`Jenkinsfile`** could look like this:
 
-```
+```groovy
 node {
-    stage('foo') {
-        sh 'git clone --single-branch --branch ${env.GWBT_BRANCH}  https://github.com/${env.GWBT_REPO_FULL_NAME}.git source'
-        dir('source') {
-            sh 'npm install'
-        }
+  stage('foo') {
+    sh 'git clone --single-branch --branch ${env.GWBT_BRANCH}  https://github.com/${env.GWBT_REPO_FULL_NAME}.git source'
+    dir('source') {
+      sh 'npm install'
     }
+  }
 }
 ```
 
 &nbsp;
 
-To **trigger build status of Pull Requests on GitHub.com** you can do
+To **trigger build status of Pull Requests on GitHub.com** you can do this via the [GitHub Statuses REST API](https://developer.github.com/v3/repos/statuses/) and your personal access token.
 
 ```groovy
 node {
@@ -260,6 +260,9 @@ node {
   }
 }
 ```
+
+
+<p align="center"><img src="https://codeclou.github.io/jenkins-github-webhook-build-trigger-plugin/img/pull-request-checks---with-overlays.png?v2" width="80%"></p>
 
 -----
 
