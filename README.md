@@ -100,7 +100,7 @@ magically by convention over configuration.
 | Variable | Description | Example |
 |----------|-------------|---------|
 | `$GWBT_COMMIT_BEFORE` | `before` commit id as sha1 hash from Webhook Payload, specifying the commit revision the repository was in before the event happened.  | `3be1cb4b6b86533b5dab2b0083fa9fb8b401b430` or <br> `0000000000000000000000000000000000000000` if push event was a tag |
-| `$GWBT_COMMIT_AFTER` | `after` commit id as sha1 hash from Webhook Payload, specifying the commit revision the repository is now in. Meaning the current revision. | `2c9522c9618864808eaaede8353dbeafb996c605` |
+| `$GWBT_COMMIT_AFTER` | `after` commit id as sha1 hash from Webhook Payload, specifying the commit revision the repository is now in. Meaning the current revision. | `2c9522c9618864808eaaede8353dbeafb996c605`  or <br> `0000000000000000000000000000000000000000` if push event was deletion of a branch e.g. after pr merge |
 | `$GWBT_REF` | `ref` from Webhook Payload representing the branch or tag that was pushed | `refs/heads/{branchname}` or <br> `refs/tags/{tagname}` |
 | `$GWBT_TAG` | short tag name derived from `ref` and stripped of clutter. | When `ref` is `refs/tags/1.0.0` then it is `1.0.0`. <br>When `ref` is not a tag, it is empty! |
 | `$GWBT_BRANCH` | short branch name derived from `ref` and stripped of clutter. | When `ref` is `refs/heads/master` then it is `master`. <br>When `ref` is not a branch, it is empty! |
@@ -226,9 +226,47 @@ node {
 }
 ```
 
+&nbsp;
+
+To **trigger build status of Pull Requests on GitHub.com** you can do
+
+```groovy
+node {
+  try {
+    stage('inform github') {
+      sh 'curl -X POST -H \'Authorization: token ' + env.GITHUB_AUTH_TOKEN + '\' ' +
+         ' https://api.github.com/repos/${GWBT_REPO_FULL_NAME}/statuses/${GWBT_COMMIT_AFTER} ' +
+         ' -d \'{ "state": "pending", "target_url": "' + env.BUILD_URL + '", "description": "The build has started" }\' '
+    }
+    stage('foo') {
+      sh 'git clone --single-branch --branch ${env.GWBT_BRANCH}  https://github.com/${env.GWBT_REPO_FULL_NAME}.git source'
+      dir('source') {
+        sh 'npm install'
+        sh 'npm build'
+      }
+    }
+  } catch (Exception err) {
+    currentBuild.result = 'FAILURE'
+  } finally {
+    if (currentBuild.result == 'FAILURE') {
+      sh 'curl -X POST -H \'Authorization: token ' + env.GITHUB_AUTH_TOKEN + '\' ' +
+         ' https://api.github.com/repos/${GWBT_REPO_FULL_NAME}/statuses/${GWBT_COMMIT_AFTER} ' +
+         ' -d \'{ "state": "failure", "target_url": "' + env.BUILD_URL + '", "description": "The build has failed" }\' '
+    } else {
+      sh 'curl -X POST -H \'Authorization: token ' + env.GITHUB_AUTH_TOKEN + '\' ' +
+         ' https://api.github.com/repos/${GWBT_REPO_FULL_NAME}/statuses/${GWBT_COMMIT_AFTER} ' +
+         ' -d \'{ "state": "success", "target_url": "' + env.BUILD_URL + '", "description": "The build was a success" }\' '
+    }
+  }
+}
+```
+
 -----
 
 &nbsp;
+
+
+
 
 ### Jenkins Job Example Triggered by Webhook Push
 
