@@ -275,7 +275,7 @@ A pull request will now get status updates for each commit.
 
 You can further enforce that a status check has to be successful in order to merge a PR. Go to  via 'Settings' → 'Branches' → 'Add Branch protection rule'.
 
-tbd
+<p align="center"><img src="https://codeclou.github.io/jenkins-github-webhook-build-trigger-plugin/img/pull-request-checks-2---with-overlays.png?v2" width="80%"></p>
 
 -----
 
