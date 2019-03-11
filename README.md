@@ -209,7 +209,9 @@ git clone --single-branch \
 
 Since version 1.1.0 [Pipeline Job Types](https://jenkins.io/doc/book/pipeline/) (NOT MultiBranch Pipeline) are supported.
 
-Make sure you have at least the following Plugins installed
+Make sure you have at least the following Plugins installed.
+
+:bangbang: **At best have the [Pipeline Bundle](https://plugins.jenkins.io/workflow-aggregator) installed** otherwise you might get `ava.lang.ClassNotFoundException: org.jenkinsci.plugins.workflow.job.WorkflowJob` Exceptions of some sort.
 
 ```
 Pipeline: Groovy
