@@ -5,9 +5,18 @@ This plugin is made by codeclou. We love [GitHub](https://github.com) and [Jenki
 
 [![](https://codeclou.github.io/jenkins-github-webhook-build-trigger-plugin/img/cc-product-logo-jenkins-github-webhook.png)](https://github.com/codeclou/jenkins-github-webhook-build-trigger-plugin)
 
+-----
+
 &nbsp;
 
-:sparkles: Download: [`github-webhook-notifier-plugin-1.2.0.hpi.zip`](https://github.com/codeclou/jenkins-github-webhook-build-trigger-plugin/releases/download/1.2.0/github-webhook-notifier-plugin-1.2.0.hpi.zip)
+### Quickstart
+
+* (1) Install the Pipeline plugins via the [Pipeline Bundle](https://plugins.jenkins.io/workflow-aggregator).
+* (2) Download: [`github-webhook-notifier-plugin-1.2.0.hpi.zip`](https://github.com/codeclou/jenkins-github-webhook-build-trigger-plugin/releases/download/1.2.0/github-webhook-notifier-plugin-1.2.0.hpi.zip) and install the plugin.
+* (3) In Jenkins global configuration define a "Webhook Secret" (see below)
+* (4) Create a job called `{gitHubRepoOwner}---{repoName}` like e.g. `codeclou---myapp`
+* (5) Configure a GitHub Webhook for push event. (see below)
+* (6) Push a code change and job should be triggered
 
 -----
 
