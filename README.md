@@ -51,7 +51,7 @@ Ok. Still here?! Then this might be for you :bowtie:
   * It then triggers all Jenkins jobs matching `{repositoryOwner}---{repositoryName}.*`
   * Lastly it injects Environment Variables into the job run for you to determine what branch and revision is to clone.
 
-![](https://codeclou.github.io/jenkins-github-webhook-build-trigger-plugin/img/webhook-payload---with-overlays.png?v2)
+![](https://codeclou.github.io/jenkins-github-webhook-build-trigger-plugin/img/webhook-payload---with-overlays.png?v3)
 
 -----
 
@@ -72,7 +72,7 @@ This is how you need to configure the GitHub Webhook in your repository 'Setting
  * **Which events ...**
    * Just the `push` event
 
-![](https://codeclou.github.io/jenkins-github-webhook-build-trigger-plugin/img/github-webhook-settings---with-overlays.png?v4)
+![](https://codeclou.github.io/jenkins-github-webhook-build-trigger-plugin/img/github-webhook-settings---with-overlays.png?v5)
 
 -----
 
@@ -82,7 +82,7 @@ This is how you need to configure the GitHub Webhook in your repository 'Setting
 
 You can configure the **Webhook Secret** Globally via 'Manage Jenkins' → 'Configure System' → 'Github Webhook Notifier Plugin'. If you do not configure it, HTTP 500 will be the response from the API.
 
-![](https://codeclou.github.io/jenkins-github-webhook-build-trigger-plugin/img/jenkins-global-config---with-overlay.png)
+![](https://codeclou.github.io/jenkins-github-webhook-build-trigger-plugin/img/jenkins-global-config---with-overlay.png?v1)
 
 &nbsp;
 
@@ -105,7 +105,7 @@ That means if your repository is `https://github.com/codeclou/test-webhook.git` 
 We do not use 'Source Code Management' and we do not need to specify some 'Build Triggers' since it is all done
 magically by convention over configuration.
 
-![](https://codeclou.github.io/jenkins-github-webhook-build-trigger-plugin/img/jenkins-job-config---with-overlays.png?v2)
+![](https://codeclou.github.io/jenkins-github-webhook-build-trigger-plugin/img/jenkins-job-config---with-overlays.png?v3)
 
 &nbsp;
 
