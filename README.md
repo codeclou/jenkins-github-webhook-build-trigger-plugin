@@ -105,7 +105,7 @@ That means if your repository is `https://github.com/codeclou/test-webhook.git` 
 We do not use 'Source Code Management' and we do not need to specify some 'Build Triggers' since it is all done
 magically by convention over configuration.
 
-<p align="center"><img src="https://codeclou.github.io/jenkins-github-webhook-build-trigger-plugin/img/jenkins-job-config---with-overlays.png?v2" width="80%"></p>
+![](https://codeclou.github.io/jenkins-github-webhook-build-trigger-plugin/img/jenkins-job-config---with-overlays.png?v2)
 
 &nbsp;
 
