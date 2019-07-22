@@ -287,11 +287,13 @@ node {
 
 A pull request will now get status updates for each commit.
 
-<p align="center"><img src="https://codeclou.github.io/jenkins-github-webhook-build-trigger-plugin/img/pull-request-checks---with-overlays.png?v2" width="80%"></p>
+![](https://codeclou.github.io/jenkins-github-webhook-build-trigger-plugin/img/pull-request-checks---with-overlays.png?v3)
 
 You can further enforce that a status check has to be successful in order to merge a PR. Go to  via 'Settings' → 'Branches' → 'Add Branch protection rule'.
 
-<p align="center"><img src="https://codeclou.github.io/jenkins-github-webhook-build-trigger-plugin/img/pull-request-checks-2---with-overlays.png?v2" width="80%"></p>
+![](https://codeclou.github.io/jenkins-github-webhook-build-trigger-plugin/img/pull-request-checks-2---with-overlays.png?v3)
+
+![](https://codeclou.github.io/jenkins-github-webhook-build-trigger-plugin/img/pull-request-checks-2.1---with-overlays.png?v3)
 
 -----
 
@@ -304,7 +306,7 @@ You can further enforce that a status check has to be successful in order to mer
 
 This is how it looks, when a Job gets triggered by a GitHub Webhook push.
  
-<p align="center"><img src="https://codeclou.github.io/jenkins-github-webhook-build-trigger-plugin/img/job-triggered---with-overlay.png" width="80%"></p>
+![](https://codeclou.github.io/jenkins-github-webhook-build-trigger-plugin/img/job-triggered---with-overlay.png?v1)
 
 &nbsp;
 
