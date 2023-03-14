@@ -1,3 +1,7 @@
+:mega: **End of Lifetime Notice**: We no longer provide support for this repository. It will be made readonly, you can still fork it and adapt it to your needs.
+
+----
+
 # Jenkins Github Webhook Build Trigger Plugin 
 
 > Trigger Jenkins Jobs via GitHub Webhooks and provide Webhook Payload Information as Environment Variables inside your Job.
